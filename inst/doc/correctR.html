@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Trent Henderson" />
+
+<meta name="date" content="2022-12-19" />
+
+<title>Introduction to correctR</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to correctR</h1>
+<h4 class="author">Trent Henderson</h4>
+<h4 class="date">2022-12-19</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a>
+<ul>
+<li><a href="#random-subsampling-correction" id="toc-random-subsampling-correction">Random subsampling
+correction</a></li>
+<li><a href="#k-fold-cross-validation-correction" id="toc-k-fold-cross-validation-correction">k-fold cross-validation
+correction</a></li>
+<li><a href="#repeated-k-fold-cross-validation-correction" id="toc-repeated-k-fold-cross-validation-correction">Repeated k-fold
+cross-validation correction</a></li>
+</ul></li>
+<li><a href="#setup" id="toc-setup">Setup</a></li>
+<li><a href="#package-functionality" id="toc-package-functionality">Package functionality</a></li>
+</ul>
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(correctR)</span></code></pre></div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><code>correctR</code> is a lightweight package that implements a
+small number of corrected test statistics for cases when samples of two
+machine learning model metrics (e.g., classification accuracy) are not
+independent (and therefore are correlated), such as in the case of
+resampling and <span class="math inline">\(k\)</span>-fold
+cross-validation. We demonstrate the basic functionality here using some
+trivial examples for the following corrected tests that are currently
+implemented in <code>correctR</code>:</p>
+<ul>
+<li>Random subsampling</li>
+<li><span class="math inline">\(k\)</span>-fold cross-validation</li>
+<li>Repeated <span class="math inline">\(k\)</span>-fold
+cross-validation</li>
+</ul>
+<p>These corrections were all originally proposed by Nadeau and Bengio
+(2003)<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
+with additional representations in Bouckaert and Frank (2004)<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+<div id="random-subsampling-correction" class="section level3">
+<h3>Random subsampling correction</h3>
+<p>In random subsampling, the standard <span class="math inline">\(t\)</span>-test inflates Type I error when used in
+conjunction with random subsampling due to an underestimation of the
+variance, as found by Dietterich (1998)<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. Nadeau and Bengio
+(2003) proposed a solution (which we implement as
+<code>resampled_ttest</code> in <code>correctR</code>) in the form
+of:</p>
+<p><span class="math display">\[
+t = \frac{\frac{1}{n} \sum_{j=1}^{n}x_{j}}{\sqrt{(\frac{1}{n} +
+\frac{n_{2}}{n_{1}})\sigma^{2}}}
+\]</span></p>
+<p>where <span class="math inline">\(n\)</span> is the number of
+resamples (NOTE: <span class="math inline">\(n\)</span> is <em>not</em>
+sample size), <span class="math inline">\(n_{1}\)</span> is the number
+of samples in the training data, and <span class="math inline">\(n_{2}\)</span> is the number of samples in the
+test data. <span class="math inline">\(\sigma^{2}\)</span> is the
+variance estimate used in the standard paired <span class="math inline">\(t\)</span>-test (which simply has <span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span> in the
+denominator where <span class="math inline">\(n\)</span> is the sample
+size in this case).</p>
+</div>
+<div id="k-fold-cross-validation-correction" class="section level3">
+<h3>k-fold cross-validation correction</h3>
+<p>There is an alternate formulation of the random subsampling
+correction, devised in terms of the unbiased estimator <span class="math inline">\(\rho\)</span>, discussed in Corani et al. (2016)<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> which we
+implement as <code>kfold_tttest</code> in <code>correctR</code>:</p>
+<p><span class="math display">\[
+t = \frac{\frac{1}{n} \sum_{j=1}^{n}x_{j}}{\sqrt{(\frac{1}{n} +
+\frac{\rho}{1-\rho})\sigma^{2}}}
+\]</span></p>
+<p>where <span class="math inline">\(n\)</span> is the number of
+resamples and <span class="math inline">\(\rho = \frac{1}{k}\)</span>
+where <span class="math inline">\(k\)</span> is the number of folds in
+the <span class="math inline">\(k\)</span>-fold cross-validation
+procedure. This formulation stems from the fact that Nadeau and Bengio
+(2003) proved there is no unbiased estimator, but it can be approximated
+with <span class="math inline">\(\rho = \frac{1}{k}\)</span>.</p>
+</div>
+<div id="repeated-k-fold-cross-validation-correction" class="section level3">
+<h3>Repeated k-fold cross-validation correction</h3>
+<p>Repeated <span class="math inline">\(k\)</span>-fold cross-validation
+is more complex than the previous case(s) as we now have <span class="math inline">\(r\)</span> repeats for every fold <span class="math inline">\(k\)</span>. Bouckaert and Frank (2004) present a
+nice representation of the corrected test for this case which we
+implement as <code>repkfold_ttest</code> in <code>correctR</code>:</p>
+<p><span class="math display">\[
+t = \frac{\frac{1}{k \cdot r} \sum_{i=1}^{k} \sum_{j=1}^{r}
+x_{ij}}{\sqrt{(\frac{1}{k \cdot r} + \frac{n_{2}}{n_{1}})\sigma^{2}}}
+\]</span></p>
+</div>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>In the real world, we would have proper results obtained through
+fitting two models according to one or more of the procedures outlined
+above. For simplicity here, we are just going to simulate three datasets
+so we can get to the package functionality cleaner and easier. We are
+going to assume we are in a classification context and generate
+classification accuracy values. These values are purposefully
+egregious—we are going to (in the case of the random subsampling) just
+fix the train set sample size (<code>n1</code>) to 80 and the test set
+sample size (<code>n2</code>) to 20, and assume (using the same data)
+for the <span class="math inline">\(k\)</span>-fold cross-validation
+correction that the same numbers were obtained on such a method. Again,
+the values are not important here, it is the corrections we are going to
+apply next that are crucial.</p>
+<p>In the case of repeated <span class="math inline">\(k\)</span>-fold
+cross-validation, take note of the column names. While your
+<code>data.frame</code> you pass in to <code>repkfold_ttest</code> can
+have more than the four columns specified here, it <strong>must</strong>
+contain at least these four with the exact corresponding names. The
+function explicitly searches for them. They are:</p>
+<ol style="list-style-type: decimal">
+<li><code>&quot;model&quot;</code> — contains a label for each of the two models
+to compare</li>
+<li><code>&quot;values&quot;</code> — the numerical values of the performance
+metric (i.e., classification accuracy)</li>
+<li><code>&quot;k&quot;</code> — which fold the values correspond to</li>
+<li><code>&quot;r&quot;</code> — which repeat of the fold the values correspond
+to</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># For reproducibility</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for random subsampling and k-fold cross-validation corrections</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="fl">0.4</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for repeated k-fold cross-validation correction</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">each =</span> <span class="dv">60</span>),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">values =</span> <span class="fu">c</span>(stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">60</span>, <span class="at">mean =</span> <span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.1</span>), </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                             stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">60</span>, <span class="at">mean =</span> <span class="fl">0.4</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="at">times =</span> <span class="dv">15</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">r =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">times =</span> <span class="dv">30</span>))</span></code></pre></div>
+</div>
+<div id="package-functionality" class="section level2">
+<h2>Package functionality</h2>
+<p>We can fit all the corrections in one-line functions:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">resampled_ttest</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">n =</span> <span class="dv">30</span>, <span class="at">n1 =</span> <span class="dv">80</span>, <span class="at">n2 =</span> <span class="dv">20</span>) <span class="co"># Random subsampling</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>kcv <span class="ot">&lt;-</span> <span class="fu">kfold_ttest</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">n =</span> <span class="dv">100</span>, <span class="at">k =</span> <span class="dv">30</span>) <span class="co"># k-fold cross-validation</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>rkcv <span class="ot">&lt;-</span> <span class="fu">repkfold_ttest</span>(<span class="at">data =</span> tmp, <span class="at">n1 =</span> <span class="dv">80</span>, <span class="at">n2 =</span> <span class="dv">20</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="dv">2</span>) <span class="co"># Repeated k-fold cross-validation</span></span></code></pre></div>
+<p>All the functions return a <code>data.frame</code> with two named
+columns: <code>&quot;statistic&quot;</code> (the <span class="math inline">\(t\)</span>-statistic) and <code>&quot;p.value&quot;</code>
+(the associated <span class="math inline">\(p\)</span>-value), meaning
+they can be easily integrated into complex machine pipelines. Here is an
+example for <code>resampled.t.test</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rss)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   statistic    p.value</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  2.407318 0.01132991</span></span></code></pre></div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>Nadeau, C., and Bengio, Y. Inference for the
+Generalization Error. Machine Learning, 52, 239-281, (2003).<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Bouckaert, R. R., and Frank, E. Evaluating the
+Replicability of Significance Tests for Comparing Learning Algorithms.
+Advances in Knowledge Discovery and Data Mining. PAKDD 2004. Lecture
+Notes in Computer Science, 3056, (2004).<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Dietterich, T. G. (1998). Approximate Statistical Tests
+for Comparing Supervised Classification Learning Algorithms. Neural
+Computation, 10(7)<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Corani, G., Benavoli, A., Demsar, J., Mangili, F., and
+Zaffalon, M. Statistical comparison of classifiers through Bayesian
+hierarchical modelling. Machine Learning, 106, (2017).<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
