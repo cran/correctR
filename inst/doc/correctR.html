@@ -12,7 +12,7 @@
 
 <meta name="author" content="Trent Henderson" />
 
-<meta name="date" content="2022-12-19" />
+<meta name="date" content="2023-08-20" />
 
 <title>Introduction to correctR</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to correctR</h1>
 <h4 class="author">Trent Henderson</h4>
-<h4 class="date">2022-12-19</h4>
+<h4 class="date">2023-08-20</h4>
 
 
 <div id="TOC">
@@ -359,7 +359,7 @@ cross-validation correction</a></li>
 </ul>
 </div>
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(correctR)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(correctR)</span></code></pre></div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p><code>correctR</code> is a lightweight package that implements a
@@ -459,35 +459,35 @@ metric (i.e., classification accuracy)</li>
 <li><code>&quot;r&quot;</code> — which repeat of the fold the values correspond
 to</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># For reproducibility</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for random subsampling and k-fold cross-validation corrections</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="fl">0.4</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for repeated k-fold cross-validation correction</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">each =</span> <span class="dv">60</span>),</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">values =</span> <span class="fu">c</span>(stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">60</span>, <span class="at">mean =</span> <span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.1</span>), </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                             stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">60</span>, <span class="at">mean =</span> <span class="fl">0.4</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="at">times =</span> <span class="dv">15</span>),</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">r =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">times =</span> <span class="dv">30</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># For reproducibility</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Data for random subsampling and k-fold cross-validation corrections</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>x <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="fl">0.4</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># Data for repeated k-fold cross-validation correction</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">model =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">each =</span> <span class="dv">60</span>),</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>                  <span class="at">values =</span> <span class="fu">c</span>(stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">60</span>, <span class="at">mean =</span> <span class="fl">0.6</span>, <span class="at">sd =</span> <span class="fl">0.1</span>), </span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>                             stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">60</span>, <span class="at">mean =</span> <span class="fl">0.4</span>, <span class="at">sd =</span> <span class="fl">0.1</span>)),</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>                  <span class="at">k =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="at">times =</span> <span class="dv">15</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>                  <span class="at">r =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">times =</span> <span class="dv">30</span>))</span></code></pre></div>
 </div>
 <div id="package-functionality" class="section level2">
 <h2>Package functionality</h2>
 <p>We can fit all the corrections in one-line functions:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">resampled_ttest</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">n =</span> <span class="dv">30</span>, <span class="at">n1 =</span> <span class="dv">80</span>, <span class="at">n2 =</span> <span class="dv">20</span>) <span class="co"># Random subsampling</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>kcv <span class="ot">&lt;-</span> <span class="fu">kfold_ttest</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">n =</span> <span class="dv">100</span>, <span class="at">k =</span> <span class="dv">30</span>) <span class="co"># k-fold cross-validation</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>rkcv <span class="ot">&lt;-</span> <span class="fu">repkfold_ttest</span>(<span class="at">data =</span> tmp, <span class="at">n1 =</span> <span class="dv">80</span>, <span class="at">n2 =</span> <span class="dv">20</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="dv">2</span>) <span class="co"># Repeated k-fold cross-validation</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">resampled_ttest</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">n =</span> <span class="dv">30</span>, <span class="at">n1 =</span> <span class="dv">80</span>, <span class="at">n2 =</span> <span class="dv">20</span>) <span class="co"># Random subsampling</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>kcv <span class="ot">&lt;-</span> <span class="fu">kfold_ttest</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">n =</span> <span class="dv">100</span>, <span class="at">k =</span> <span class="dv">30</span>) <span class="co"># k-fold cross-validation</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>rkcv <span class="ot">&lt;-</span> <span class="fu">repkfold_ttest</span>(<span class="at">data =</span> tmp, <span class="at">n1 =</span> <span class="dv">80</span>, <span class="at">n2 =</span> <span class="dv">20</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="dv">2</span>) <span class="co"># Repeated k-fold cross-validation</span></span></code></pre></div>
 <p>All the functions return a <code>data.frame</code> with two named
 columns: <code>&quot;statistic&quot;</code> (the <span class="math inline">\(t\)</span>-statistic) and <code>&quot;p.value&quot;</code>
 (the associated <span class="math inline">\(p\)</span>-value), meaning
 they can be easily integrated into complex machine pipelines. Here is an
 example for <code>resampled.t.test</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rss)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   statistic    p.value</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  2.407318 0.01132991</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">print</span>(rss)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">##   statistic    p.value</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">## 1  2.407318 0.01132991</span></span></code></pre></div>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />
