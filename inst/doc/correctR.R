@@ -25,10 +25,22 @@ tmp <- data.frame(model = rep(c(1, 2), each = 60),
                   r = rep(c(1, 2), times = 30))
 
 ## ---- message = FALSE, warning = FALSE----------------------------------------
-rss <- resampled_ttest(x = x, y = y, n = 30, n1 = 80, n2 = 20) # Random subsampling
-kcv <- kfold_ttest(x = x, y = y, n = 100, k = 30) # k-fold cross-validation
-rkcv <- repkfold_ttest(data = tmp, n1 = 80, n2 = 20, k = 2, r = 2) # Repeated k-fold cross-validation
+rss <- resampled_ttest(x = x, y = y, n = 30, n1 = 80, n2 = 20)
+kcv <- kfold_ttest(x = x, y = y, n = 100, k = 30)
+rkcv <- repkfold_ttest(data = tmp, n1 = 80, n2 = 20, k = 2, r = 2)
 
 ## ---- message = FALSE, warning = FALSE----------------------------------------
 print(rss)
+
+## ---- message = FALSE, warning = FALSE----------------------------------------
+resampled_ttest(x = x, y = y, n = 30, n1 = 80, n2 = 20, 
+                tailed = "one", greater = "x")
+
+## ---- message = FALSE, warning = FALSE----------------------------------------
+kfold_ttest(x = x, y = y, n = 100, k = 30, 
+            tailed = "one", greater = "x")
+
+## ---- message = FALSE, warning = FALSE----------------------------------------
+repkfold_ttest(data = tmp, n1 = 80, n2 = 20, k = 2, r = 2, 
+               tailed = "one", greater = 1)
 
